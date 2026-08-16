@@ -2652,8 +2652,8 @@ a.mm-nav, a.mm-view-all { text-decoration: none; display: inline-flex; align-ite
   box-shadow: 0 0 18px color-mix(in oklab, var(--rar) 65%, transparent);
 }
 .armory-stage-info { display: grid; gap: 0.35rem; justify-items: center; text-align: center; }
-.armory-name { margin: 0; font-family: var(--font-fair); font-size: clamp(0.9rem, 3vw, 1.35rem); color: #fff; }
-.armory-blurb { margin: 0; font-size: 0.78rem; color: #cbb8f2; }
+.armory-name { margin: 0; font-family: var(--font-fair); font-size: clamp(0.9rem, 3vw, 1.35rem); color: #fff; text-shadow: 0 2px 10px rgb(0 0 0 / 0.9); }
+.armory-blurb { margin: 0; font-size: 0.78rem; color: #fff; }
 .armory-hint { margin: 0; font-size: 0.6rem; letter-spacing: 0.14em; color: rgb(203 184 242 / 0.6); }
 .armory-cta {
   margin-top: 0.35rem;
@@ -2715,11 +2715,13 @@ a.mm-nav, a.mm-view-all { text-decoration: none; display: inline-flex; align-ite
   box-shadow: 0 0 0 1px var(--rar), 0 0 26px color-mix(in oklab, var(--rar) 50%, transparent);
   transform: translateY(-4px) rotateX(5deg);
 }
-.armory-card.is-locked { filter: saturate(0.45) brightness(0.8); }
+.armory-card.is-locked { filter: saturate(0.6) brightness(0.95); }
 .armory-card-art { position: relative; width: 100%; display: grid; place-items: center; }
 .armory-card-art .model-viewer { height: 86px; border-radius: 0.55rem; background: radial-gradient(60% 60% at 50% 45%, color-mix(in oklab, var(--rar) 22%, transparent), rgb(6 4 16 / 0.85)); }
 .armory-card-lock { position: absolute; right: 4px; top: 4px; font-size: 0.85rem; }
-.armory-card-name { font-family: var(--font-fair); font-size: 0.58rem; text-align: center; color: #fff; }
+.armory-card-name { font-family: var(--font-fair); font-size: 0.58rem; text-align: center; color: #fff; text-shadow: 0 1px 6px rgb(0 0 0 / 0.9); }
+.armory-card.is-locked .armory-card-name { color: #fff; opacity: 1; }
+.armory-card-meta, .armory-card.is-locked .armory-card-meta { color: #fff; }
 .armory-card-meta { font-size: 0.55rem; letter-spacing: 0.08em; color: #cbb8f2; }
 .armory-card.is-on .armory-card-meta { color: #8bff5a; }
 .armory-card-rar {
