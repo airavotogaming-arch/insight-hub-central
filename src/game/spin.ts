@@ -7,7 +7,7 @@ const TOTAL = "carnival-spin-total";
 const WON = "carnival-spin-won";
 
 /** Price of an extra spin once the free daily one is used. */
-export const SPIN_COST = 400;
+export const SPIN_COST = 750;
 
 export interface Wedge {
   label: string;
@@ -18,14 +18,14 @@ export interface Wedge {
 
 /** Wheel layout — order here is the order drawn clockwise. */
 export const WEDGES: Wedge[] = [
-  { label: "100", coins: 100, weight: 26, color: "#ff5da2" },
-  { label: "250", coins: 250, weight: 22, color: "#4dd2ff" },
-  { label: "50", coins: 50, weight: 24, color: "#8bff5a" },
-  { label: "500", coins: 500, weight: 14, color: "#ffd93d" },
-  { label: "150", coins: 150, weight: 20, color: "#b794ff" },
-  { label: "1000", coins: 1000, weight: 6, color: "#ff8a3d" },
-  { label: "75", coins: 75, weight: 24, color: "#5ad1a5" },
-  { label: "2500", coins: 2500, weight: 2, color: "#ff3b5c" },
+  { label: "25", coins: 25, weight: 28, color: "#ff5da2" },
+  { label: "60", coins: 60, weight: 22, color: "#4dd2ff" },
+  { label: "15", coins: 15, weight: 26, color: "#8bff5a" },
+  { label: "120", coins: 120, weight: 12, color: "#ffd93d" },
+  { label: "40", coins: 40, weight: 20, color: "#b794ff" },
+  { label: "250", coins: 250, weight: 5, color: "#ff8a3d" },
+  { label: "20", coins: 20, weight: 26, color: "#5ad1a5" },
+  { label: "600", coins: 600, weight: 1, color: "#ff3b5c" },
 ];
 
 export interface SpinState {
