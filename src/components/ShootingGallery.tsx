@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Menu, Volume2, VolumeX } from "lucide-react";
 import JoyBlasterLogo from "@/components/JoyBlasterLogo";
 import SplashScreen from "@/components/SplashScreen";
@@ -118,7 +118,9 @@ export default function ShootingGallery() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [globalBoard, setGlobalBoard] = useState<LeaderboardEntry[] | null>(null);
   const [showInstructions, setShowInstructions] = useState(false);
-  const [showShop, setShowShop] = useState(false);
+  const navigate = useNavigate();
+  const openShop = () => navigate({ to: "/shop" });
+  const [showShop] = useState(false);
   const [showSound, setShowSound] = useState(false);
   const [showBriefing, setShowBriefing] = useState(false);
   const [adTestMode, setAdTestModeState] = useState(false);
@@ -1027,7 +1029,7 @@ export default function ShootingGallery() {
           level={maxLevel}
 
           onPlay={beginRound}
-          onShop={() => setShowShop(true)}
+          onShop={openShop}
           onHelp={() => setShowHelp(true)}
           onLeaderboard={() => setShowLeaderboard(true)}
           onRewardClaimed={(next) => setBankState(next)}
@@ -1262,7 +1264,7 @@ export default function ShootingGallery() {
 
       {/* ---------- prize shop ---------- */}
       {showShop && (
-        <div key="ov-shop" className="absolute inset-0 z-50 flex items-start justify-center overflow-y-auto bg-overlay px-3 py-3 sm:items-center sm:px-4 sm:py-4" onClick={() => setShowShop(false)}>
+        <div key="ov-shop" className="absolute inset-0 z-50 flex items-start justify-center overflow-y-auto bg-overlay px-3 py-3 sm:items-center sm:px-4 sm:py-4" onClick={() => {}}>
           <div className="overlay-card help-card" onClick={(e) => e.stopPropagation()}>
             <h2 className="fair-title text-[clamp(1.6rem,5vw,2.8rem)]">Prize Shop</h2>
             <p className="fair-sub">Ticket bank: <strong className="text-ticket">{bank}</strong></p>
@@ -1423,7 +1425,7 @@ export default function ShootingGallery() {
             <Link to="/shop" className="fair-button shop-3d-link">
               Open 3D Showroom
             </Link>
-            <button className="fair-button" onClick={() => setShowShop(false)}>Close</button>
+            <button className="fair-button" onClick={() => {}}>Close</button>
           </div>
         </div>
       )}

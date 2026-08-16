@@ -1,11 +1,26 @@
 import { useEffect, useState } from "react";
 import logoAsset from "@/assets/airavoto-logo.png";
 
+const SEEN_KEY = "airavoto-splash-seen";
+
 export default function SplashScreen() {
+  const [gone, setGone] = useState(true);
   const [leaving, setLeaving] = useState(false);
-  const [gone, setGone] = useState(false);
 
   useEffect(() => {
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(SEEN_KEY) === "1";
+    } catch {
+      seen = false;
+    }
+    if (seen) return;
+    try {
+      sessionStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setGone(false);
     const t1 = setTimeout(() => setLeaving(true), 2000);
     const t2 = setTimeout(() => setGone(true), 2650);
     return () => {
