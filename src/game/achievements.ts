@@ -78,7 +78,7 @@ export function getAchievements(): AchievementRow[] {
 
 export function claimAchievement(id: string): { ok: boolean; reward: number; bank: number } {
   const row = getAchievements().find((a) => a.id === id);
-  if (!row || !row.claimable) return { ok: false, reward: 20, bank: getBank() };
+  if (!row || !row.claimable) return { ok: false, reward: 0, bank: getBank() };
   setBank(getBank() + row.reward);
   secureSet(CLAIMED, [...new Set([...getClaimedIds(), id])]);
   return { ok: true, reward: row.reward, bank: getBank() };
