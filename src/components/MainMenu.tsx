@@ -60,6 +60,9 @@ export default function MainMenu({
   const [spinReady, setSpinReady] = useState(false);
   const [missions, setMissions] = useState<AchievementRow[]>([]);
   const [daily, setDaily] = useState<DailyState | null>(null);
+  const [gunId, setGunId] = useState("carnival");
+  const equippedGun = getGunSkin(gunId);
+
 
   // read progress on mount and whenever the coin balance changes (i.e. after a round)
   useEffect(() => {
