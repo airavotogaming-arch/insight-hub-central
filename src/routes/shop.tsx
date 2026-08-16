@@ -3,6 +3,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ModelViewer } from "@/components/ModelViewer";
 import { GUN_ITEMS } from "@/game/guns";
 import { RARITY_LABEL, rarityOf } from "@/game/rarity";
+import { DIAMONDS_PER_AD, diamondCost, getDiamonds, grantAdDiamonds, spendDiamonds } from "@/game/diamonds";
+import { canShowRewarded, markRewardedShown } from "@/lib/adConfig";
+import { showRewarded } from "@/lib/playgama";
 import {
   SHOP_ITEMS,
   addOwned,
@@ -56,6 +59,8 @@ function ShopPage() {
   const [gun, setGun] = useState("carnival");
   const [selGun, setSelGun] = useState("carnival");
   const [selCross, setSelCross] = useState("classic");
+  const [gems, setGems] = useState(0);
+  const [adBusy, setAdBusy] = useState(false);
 
   useEffect(() => {
     setBankState(getBank());
@@ -65,6 +70,7 @@ function ShopPage() {
     setGun(getEquippedGun());
     setSelGun(getEquippedGun());
     setSelCross(getEquipped());
+    setGems(getDiamonds());
   }, []);
 
   const isGun = tab === "gun";
@@ -77,6 +83,40 @@ function ShopPage() {
   const isEquipped = equippedId === selected.id;
   const short = selected.cost - bank;
   const rarity = rarityOf(selected.cost);
+  const gemPrice = diamondCost(selected.cost);
+  const canGemBuy = !isOwned && gemPrice > 0 && gems >= gemPrice;
+
+  const unlock = (id: string) => {
+    if (isGun) {
+      addOwnedGun(id);
+      setOwnedGunsState(getOwnedGuns());
+    } else {
+      addOwned(id);
+      setOwned(getOwned());
+    }
+    equip(id);
+  };
+
+  const buyWithGems = () => {
+    if (isOwned || gemPrice <= 0) return;
+    if (!spendDiamonds(gemPrice)) return;
+    setGems(getDiamonds());
+    unlock(selected.id);
+  };
+
+  const watchAdForGems = () => {
+    if (adBusy || !canShowRewarded()) return;
+    setAdBusy(true);
+    markRewardedShown();
+    void showRewarded()
+      .then((rewarded) => {
+        if (rewarded) {
+          grantAdDiamonds();
+          setGems(getDiamonds());
+        }
+      })
+      .finally(() => setAdBusy(false));
+  };
 
   const equip = (id: string) => {
     if (isGun) {
@@ -119,6 +159,10 @@ function ShopPage() {
             <div className="armory-chip">
               <strong>{bank.toLocaleString()}</strong>
               <span>TICKETS</span>
+            </div>
+            <div className="armory-chip">
+              <strong>{gems.toLocaleString()} 💎</strong>
+              <span>DIAMONDS</span>
             </div>
             <div className="armory-chip">
               <strong>
@@ -178,9 +222,19 @@ function ShopPage() {
               <button className="armory-cta" disabled={!isOwned && bank < selected.cost} onClick={act}>
                 {isEquipped ? "EQUIPPED" : isOwned ? "EQUIP" : `BUY · ${selected.cost.toLocaleString()} 🎟`}
               </button>
+              {!isOwned && gemPrice > 0 && (
+                <button className="armory-cta gem" disabled={!canGemBuy} onClick={buyWithGems}>
+                  BUY · {gemPrice} 💎
+                </button>
+              )}
+              {!isOwned && (
+                <button className="armory-cta ghost" disabled={adBusy} onClick={watchAdForGems}>
+                  {adBusy ? "LOADING AD…" : `📺 WATCH AD · +${DIAMONDS_PER_AD} 💎`}
+                </button>
+              )}
               {!isOwned && short > 0 && (
                 <p className="armory-hint">
-                  NEED {short.toLocaleString()} MORE TICKET{short === 1 ? "" : "S"}
+                  NEED {short.toLocaleString()} MORE TICKET{short === 1 ? "" : "S"} OR {gemPrice} 💎
                 </p>
               )}
             </div>
@@ -209,7 +263,11 @@ function ShopPage() {
                   </span>
                   <span className="armory-card-name">{item.name}</span>
                   <span className="armory-card-meta">
-                    {on ? "EQUIPPED" : own ? "OWNED" : `${item.cost.toLocaleString()} 🎟`}
+                    {on
+                      ? "EQUIPPED"
+                      : own
+                        ? "OWNED"
+                        : `${item.cost.toLocaleString()} 🎟 · ${diamondCost(item.cost)} 💎`}
                   </span>
                 </button>
               );
