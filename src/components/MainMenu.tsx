@@ -295,14 +295,12 @@ export default function MainMenu({
           </section>
 
           <section className="mm-panel mm-panel-blue mm-weapon">
-            <h2 className="mm-panel-title">CARNIVAL BLASTER</h2>
-            <img
-              className="mm-blaster"
-              src={blasterImg}
-              alt="Carnival blaster"
-              loading="lazy"
-              width={768}
-              height={768}
+            <h2 className="mm-panel-title">{equippedGun.name.toUpperCase()}</h2>
+            <ModelViewer
+              key={equippedGun.id}
+              kind="gun"
+              itemId={equippedGun.id}
+              className="mm-blaster mm-blaster-3d"
             />
             <span className="mm-power">
               POWER <strong>+40%</strong>
