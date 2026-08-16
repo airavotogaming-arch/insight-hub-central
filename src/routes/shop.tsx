@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import shopBg from "@/assets/shop-bg.jpg";
 import { ModelViewer } from "@/components/ModelViewer";
 import { GUN_ITEMS } from "@/game/guns";
+import { RARITY_LABEL, rarityOf } from "@/game/rarity";
 import {
   SHOP_ITEMS,
   addOwned,
@@ -40,6 +40,13 @@ export const Route = createFileRoute("/shop")({
 
 type Tab = "gun" | "crosshair";
 
+const RARITY_HEX: Record<string, string> = {
+  common: "#9fb2d8",
+  rare: "#4dd2ff",
+  epic: "#c07bff",
+  legendary: "#ffb028",
+};
+
 function ShopPage() {
   const [tab, setTab] = useState<Tab>("gun");
   const [bank, setBankState] = useState(0);
@@ -69,6 +76,7 @@ function ShopPage() {
   const isOwned = ownedIds.includes(selected.id);
   const isEquipped = equippedId === selected.id;
   const short = selected.cost - bank;
+  const rarity = rarityOf(selected.cost);
 
   const equip = (id: string) => {
     if (isGun) {
@@ -100,87 +108,124 @@ function ShopPage() {
   };
 
   return (
-    <div className="shop-page" style={{ backgroundImage: `url(${shopBg})` }}>
-      <div className="shop-page-scrim" />
-      <div className="shop-page-inner">
-        <header className="shop-page-head">
-          <Link to="/" className="fair-button shop-page-back">
-            ← Back to game
-          </Link>
+    <main className="armory">
+      <div className="armory-inner">
+        <header className="armory-head">
           <div>
-            <h1 className="fair-title shop-page-title">Prize Shop</h1>
-            <p className="fair-sub">
-              Ticket bank: <strong className="text-ticket">{bank}</strong> 🎟 · drag a model to spin it
-            </p>
+            <p className="armory-eyebrow">TICKET EXCHANGE</p>
+            <h1 className="armory-title">PRIZE SHOP</h1>
+          </div>
+          <div className="armory-chips">
+            <div className="armory-chip">
+              <strong>{bank.toLocaleString()}</strong>
+              <span>TICKETS</span>
+            </div>
+            <div className="armory-chip">
+              <strong>
+                {ownedGuns.length}/{GUN_ITEMS.length}
+              </strong>
+              <span>BLASTERS</span>
+            </div>
+            <div className="armory-chip">
+              <strong>
+                {owned.length}/{SHOP_ITEMS.length}
+              </strong>
+              <span>SIGHTS</span>
+            </div>
+            <Link to="/" className="armory-back">
+              ← BACK
+            </Link>
           </div>
         </header>
 
-        <div className="shop-tabs shop-page-tabs">
-          <button className={`shop-tab ${isGun ? "on" : ""}`} onClick={() => setTab("gun")}>
-            Blasters
+        <div className="armory-tabs" role="tablist">
+          <button
+            role="tab"
+            aria-selected={isGun}
+            className={`armory-tab ${isGun ? "is-on" : ""}`}
+            onClick={() => setTab("gun")}
+          >
+            BLASTERS
           </button>
-          <button className={`shop-tab ${!isGun ? "on" : ""}`} onClick={() => setTab("crosshair")}>
-            Crosshairs
+          <button
+            role="tab"
+            aria-selected={!isGun}
+            className={`armory-tab ${!isGun ? "is-on" : ""}`}
+            onClick={() => setTab("crosshair")}
+          >
+            CROSSHAIRS
           </button>
         </div>
 
-        <div className="shop-page-body">
-          <section className="shop-stage">
-            <ModelViewer
-              key={`${tab}-${selected.id}`}
-              kind={isGun ? "gun" : "crosshair"}
-              itemId={selected.id}
-              className="model-viewer"
-            />
-            <div className="shop-stage-info">
-              <h2 className="shop-stage-name">{selected.name}</h2>
-              <p className="shop-stage-blurb">{selected.blurb}</p>
-              <p className="shop-stage-hint">Drag to rotate · scroll to zoom</p>
-              <button
-                className="fair-button shop-purchase"
-                disabled={!isOwned && bank < selected.cost}
-                onClick={act}
-              >
-                {isEquipped
-                  ? "Equipped"
-                  : isOwned
-                    ? "Equip"
-                    : `Buy for ${selected.cost} 🎟`}
+        <div className="armory-body">
+          <section className="armory-stage" style={{ ["--rar" as string]: RARITY_HEX[rarity] }}>
+            <div className="armory-stage-holo">
+              <span className="armory-rarity">{RARITY_LABEL[rarity]}</span>
+              <ModelViewer
+                key={`${tab}-${selected.id}`}
+                kind={isGun ? "gun" : "crosshair"}
+                itemId={selected.id}
+                className="model-viewer"
+              />
+              <span className="armory-beam" />
+              <span className="armory-disc" />
+              <span className="armory-disc inner" />
+            </div>
+            <div className="armory-stage-info">
+              <h2 className="armory-name">{selected.name}</h2>
+              <p className="armory-blurb">{selected.blurb}</p>
+              <p className="armory-hint">DRAG TO ROTATE · SCROLL TO ZOOM</p>
+              <button className="armory-cta" disabled={!isOwned && bank < selected.cost} onClick={act}>
+                {isEquipped ? "EQUIPPED" : isOwned ? "EQUIP" : `BUY · ${selected.cost.toLocaleString()} 🎟`}
               </button>
               {!isOwned && short > 0 && (
-                <p className="shop-purchase-hint">
-                  You need {short} more ticket{short === 1 ? "" : "s"}.
+                <p className="armory-hint">
+                  NEED {short.toLocaleString()} MORE TICKET{short === 1 ? "" : "S"}
                 </p>
               )}
             </div>
           </section>
 
-          <section className="shop-page-list">
+          <section className="armory-rack">
             {items.map((item) => {
               const own = ownedIds.includes(item.id);
+              const on = equippedId === item.id;
+              const rar = rarityOf(item.cost);
               return (
                 <button
                   key={item.id}
-                  className={`shop-item shop-page-item ${equippedId === item.id ? "equipped" : own ? "owned" : bank < item.cost ? "locked" : ""} ${selected.id === item.id ? "selected" : ""}`}
+                  style={{ ["--rar" as string]: RARITY_HEX[rar] }}
+                  className={`armory-card ${own ? "" : "is-locked"} ${on ? "is-on" : ""} ${selected.id === item.id ? "is-sel" : ""}`}
                   onClick={() => (isGun ? setSelGun(item.id) : setSelCross(item.id))}
                 >
-                  <span className="shop-page-thumb">
+                  <span className="armory-card-rar" />
+                  <span className="armory-card-art">
                     <ModelViewer
                       kind={isGun ? "gun" : "crosshair"}
                       itemId={item.id}
                       className="model-viewer thumb"
                     />
+                    {!own && <span className="armory-card-lock">🔒</span>}
                   </span>
-                  <span className="shop-name">{item.name}</span>
-                  <span className="shop-cost">
-                    {equippedId === item.id ? "EQUIPPED" : own ? "OWNED" : `${item.cost} 🎟`}
+                  <span className="armory-card-name">{item.name}</span>
+                  <span className="armory-card-meta">
+                    {on ? "EQUIPPED" : own ? "OWNED" : `${item.cost.toLocaleString()} 🎟`}
                   </span>
                 </button>
               );
             })}
           </section>
         </div>
+
+        <div className="armory-foot">
+          <Link to="/collection" className="armory-back">
+            🎒 3D COLLECTION
+          </Link>
+          <Link to="/achievements" className="armory-back">
+            🏅 ACHIEVEMENTS
+          </Link>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
