@@ -7,7 +7,9 @@ import { getAchievements, type AchievementRow } from "@/game/achievements";
 
 import JoyBlasterLogo from "@/components/JoyBlasterLogo";
 import menuBg from "@/assets/menu-bg.png";
-import blasterImg from "@/assets/menu-blaster.png";
+import { ModelViewer } from "@/components/ModelViewer";
+import { getEquippedGun } from "@/game/shop";
+import { getGunSkin } from "@/game/guns";
 import giftImg from "@/assets/menu-gift.png";
 import avatarImg from "@/assets/menu-avatar.png";
 
