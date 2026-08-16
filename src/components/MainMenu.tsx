@@ -7,7 +7,9 @@ import { getAchievements, type AchievementRow } from "@/game/achievements";
 
 import JoyBlasterLogo from "@/components/JoyBlasterLogo";
 import menuBg from "@/assets/menu-bg.png";
-import blasterImg from "@/assets/menu-blaster.png";
+import { ModelViewer } from "@/components/ModelViewer";
+import { getEquippedGun } from "@/game/shop";
+import { getGunSkin } from "@/game/guns";
 import giftImg from "@/assets/menu-gift.png";
 import avatarImg from "@/assets/menu-avatar.png";
 
@@ -58,10 +60,14 @@ export default function MainMenu({
   const [spinReady, setSpinReady] = useState(false);
   const [missions, setMissions] = useState<AchievementRow[]>([]);
   const [daily, setDaily] = useState<DailyState | null>(null);
+  const [gunId, setGunId] = useState("carnival");
+  const equippedGun = getGunSkin(gunId);
+
 
   // read progress on mount and whenever the coin balance changes (i.e. after a round)
   useEffect(() => {
     setReward(getRewardState());
+    setGunId(getEquippedGun());
     const d = getDailyState();
     setDaily(d);
     setDailyReady(d.canClaim);
@@ -293,14 +299,12 @@ export default function MainMenu({
           </section>
 
           <section className="mm-panel mm-panel-blue mm-weapon">
-            <h2 className="mm-panel-title">CARNIVAL BLASTER</h2>
-            <img
-              className="mm-blaster"
-              src={blasterImg}
-              alt="Carnival blaster"
-              loading="lazy"
-              width={768}
-              height={768}
+            <h2 className="mm-panel-title">{equippedGun.name.toUpperCase()}</h2>
+            <ModelViewer
+              key={equippedGun.id}
+              kind="gun"
+              itemId={equippedGun.id}
+              className="mm-blaster mm-blaster-3d"
             />
             <span className="mm-power">
               POWER <strong>+40%</strong>

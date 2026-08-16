@@ -2100,6 +2100,8 @@ html {
 /* ---- right ---- */
 .mm-gift { width: 58%; max-height: 14vh; margin: 0 auto; display: block; object-fit: contain; filter: drop-shadow(0 0 16px rgba(120, 190, 255, 0.6)); }
 .mm-blaster { width: 88%; max-height: 18vh; margin: 0 auto; display: block; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6)); }
+.mm-blaster-3d { width: 100%; height: 18vh; min-height: 110px; max-height: 18vh; touch-action: none; }
+
 .mm-power {
   display: inline-block; margin: 0.15rem auto 0.3rem; padding: 0.12rem 0.5rem; border-radius: 0.45rem;
   font-family: var(--font-fair); font-size: 0.54rem; color: #ffe9b8;
