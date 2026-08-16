@@ -67,6 +67,7 @@ export default function MainMenu({
   // read progress on mount and whenever the coin balance changes (i.e. after a round)
   useEffect(() => {
     setReward(getRewardState());
+    setGunId(getEquippedGun());
     const d = getDailyState();
     setDaily(d);
     setDailyReady(d.canClaim);
