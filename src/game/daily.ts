@@ -22,7 +22,7 @@ const STREAK = "carnival-daily-streak";
 const BEST_STREAK = "carnival-daily-best-streak";
 
 /** Seven day ladder — day 7 is the big one, then it loops. */
-export const DAILY_LADDER = [150, 250, 400, 600, 850, 1200, 2000];
+export const DAILY_LADDER = [40, 60, 90, 130, 180, 250, 400];
 
 export interface DailyState {
   /** 1..7 — the day slot that can be claimed right now */

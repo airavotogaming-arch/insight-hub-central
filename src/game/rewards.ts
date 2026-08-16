@@ -2,12 +2,12 @@ import { secureGet, secureSet, safeInt } from "./secureStore";
 import { getMatchesPlayed, getBank, setBank } from "./shop";
 
 /** Games you have to finish to unlock one mystery box. */
-export const GAMES_PER_REWARD = 10;
+export const GAMES_PER_REWARD = 18;
 
 const CLAIMED = "carnival-rewards-claimed";
 
 /** Coins in the box; grows a little with every box you open, capped. */
-export const rewardAmount = (claimed: number) => Math.min(2000, 250 + claimed * 150);
+export const rewardAmount = (claimed: number) => Math.min(450, 60 + claimed * 30);
 
 export interface RewardState {
   /** total finished matches on record */
